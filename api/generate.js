@@ -1,12 +1,10 @@
-// 環境変数の確認ログ
-console.log("✅ APIキー読めてる？", process.env.OPENAI_API_KEY);
+console.log("✅ APIキー読めてる？", process.env.OPENROUTER_API_KEY);
 
 export default async function handler(req, res) {
   const { question } = req.body;
 
-  // APIキーが設定されてなかったら即エラー返す
-  if (!process.env.OPENAI_API_KEY) {
-    console.error("❌ OPENAI_API_KEY が undefined です！");
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.error("❌ OPENROUTER_API_KEY が未設定です！");
     return res.status(500).json({ error: "APIキーが設定されていません" });
   }
 
@@ -23,23 +21,17 @@ export default async function handler(req, res) {
 出力：
 `;
 
-  // リクエスト内容の確認ログ
-  console.log("📨 OpenAIに送る内容:", {
-    model: "gpt-3.5-turbo",
-    messages: [{ role: "user", content: prompt }],
-    max_tokens: 50,
-    temperature: 0.9,
-  });
-
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        "HTTP-Referer": "https://gyakubot.vercel.app", // ← 自分のサイトURLを入れる
+        "X-Title": "Gyakubot"
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "openai/gpt-3.5-turbo", // または別のモデル名に変更可
         messages: [{ role: "user", content: prompt }],
         max_tokens: 50,
         temperature: 0.9,
@@ -47,11 +39,8 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
+    console.log("📥 OpenRouter response:", data);
 
-    // OpenAIからの返答ログ
-    console.log("📥 OpenAIのレスポンス:", data);
-
-    // 想定外エラーパターン
     if (!data.choices || !data.choices[0]?.message?.content) {
       console.error("❌ GPTの返答が不正です:", data);
       return res.status(500).json({ error: "GPTの返答が不正です" });
@@ -61,7 +50,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ answer });
 
   } catch (error) {
-    console.error("❌ OpenAI API呼び出し失敗:", error);
-    return res.status(500).json({ error: "OpenAI API呼び出しに失敗しました" });
+    console.error("❌ OpenRouter API呼び出し失敗:", error);
+    return res.status(500).json({ error: "API呼び出しに失敗しました" });
   }
 }
