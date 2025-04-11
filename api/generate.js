@@ -1,3 +1,4 @@
+console.log("APIキー読めてる？", process.env.OPENAI_API_KEY);
 export default async function handler(req, res) {
   const { question } = req.body;
 
