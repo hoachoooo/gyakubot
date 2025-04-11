@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>逆言葉ボット</title>
+
+  <!-- おしゃれフォント -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Noto+Sans+JP&display=swap" rel="stylesheet">
+
+  <!-- CSS読み込み -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,9 +16,13 @@
     <h1>逆言葉ボット</h1>
     <input type="text" id="question" placeholder="なんでも聞いてみて" />
     <button onclick="sendQuestion()">送信</button>
-    <img id="fujimoto" src="img/fujimoto.png" alt="藤本" />
-    <p id="response"> </p>
+    <p id="response"></p>
   </div>
+
+  <!-- 藤本さん画像（超重要） -->
+  <img id="fujimoto" src="img/fujimoto.png" alt="藤本" />
+
+  <!-- JS読み込み -->
   <script src="script.js"></script>
 </body>
 </html>
