@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   const { question } = req.body;
 
-const prompt = `
+  const prompt = `
 お笑い芸人・藤本の「逆言葉」ネタのフォーマットに従い、与えられたお題に対して、語感・意味・リズム・印象などを逆っぽくひねった言葉を1つだけ返してください。
 前置き・説明・補足は一切不要。
 一言だけ、逆言葉として成立する語句を提示してください。
@@ -29,6 +29,7 @@ const prompt = `
   });
 
   const data = await response.json();
+  console.log("OpenAI response:", data);
   const answer = data.choices?.[0]?.message?.content?.trim();
 
   res.status(200).json({ answer });
